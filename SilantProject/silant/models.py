@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 class Technica(models.Model):
     title = models.CharField(max_length=150)
@@ -35,6 +35,7 @@ class Steerable_Bridge(models.Model):
         return self.title
 
 class Client(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
     descrip = models.TextField(max_length=2500)
 
@@ -61,6 +62,10 @@ class Usel_Refusal(models.Model):
 
     def __str__(self):
         return self.title
+
+class Recovery(models.Model):
+    title = models.CharField(max_length=150)
+    descrip = models.TextField(max_length=2500)
 
 class Machine(models.Model):
     number_machine = models.CharField(max_length=100)
@@ -93,12 +98,15 @@ class TO(models.Model):
     data_zakaza = models.DateField(auto_now_add=True)
     service_company = models.ForeignKey(Service, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str(self.car)
+
 class Complaint(models.Model):
     date_refusal = models.DateField()
     working_off = models.IntegerField()
     usel = models.ForeignKey(Usel_Refusal, on_delete=models.CASCADE)
     description = models.TextField(max_length=1000)
-    recovery = models.TextField(max_length=1000)
+    recovery = models.ForeignKey(Recovery,on_delete=models.CASCADE)
     spare_parts = models.TextField(max_length=1000)
     date_recovery = models.DateField()
     @property
